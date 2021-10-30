@@ -14,9 +14,8 @@ class CorrMatrix:
 
     def run_all(self):
         """
-        Runs all functions in class.
+        Runs all class methods.
         """
-
         self.construct_r_mat()
         self.calculate_p_values()
         self.export_mat('correlation_matrix.xlsx', 'p_matrix.xlsx')
@@ -26,7 +25,6 @@ class CorrMatrix:
         Constructs a correlation matrix from the dataset.
         :param remove_redundant: Introduce a diagonal split to the dataset to remove redundant comparisons.
         """
-
         self.corr_matrix = self.data.corr(method='pearson').round(decimals=3)
         if remove_redundant:
             self.corr_matrix = self.corr_matrix.mask(np.tril(np.ones(self.corr_matrix.shape)).astype(np.bool))
@@ -38,7 +36,6 @@ class CorrMatrix:
         :param corr_out: correlation output path (.xlsx)
         :param p_out: p-value output path (.xlsx)
         """
-
         self.corr_matrix.to_excel(corr_out)
         self.p_matrix.to_excel(p_out)
 
@@ -70,7 +67,6 @@ class BuildData:
         Initialize attributes.
         :param df: Pandas DataFrame
         """
-
         self.data = df
         self.outliers = None
         self.means = None
@@ -79,9 +75,8 @@ class BuildData:
 
     def run_all(self):
         """
-        Runs all functions in class.
+        Runs all class methods.
         """
-
         self.format_header()
         self.remove_outliers()
 
@@ -89,7 +84,6 @@ class BuildData:
         """
         Hardcoded formatting of the dataset header.
         """
-
         self.title = ['LAV Diam (mm)', 'RAV Diam (mm)', 'Aortic Diam (mm)', 'Pulmonary Diam (mm)', 'Atria Vol (mL)',
                       'LV + S Vol (mL)', 'RV Vol (mL)', '(LV + S)/RV Vol (mL)']
 
@@ -100,7 +94,6 @@ class BuildData:
         """
         Computes stats for the dataset and saves as attributes.
         """
-
         # Calculate mean of each measurement type
         self.means = [mean(self.data[col]) for col in self.data.columns]
 
@@ -111,7 +104,6 @@ class BuildData:
         """
         Removes outliers > 3 or < 3 standard deviations from the mean. Updates stats.
         """
-
         self.stats()
 
         drop_indices = []
@@ -163,16 +155,15 @@ if __name__ == '__main__':
     y = build_data.data[y_name]
     x_name = 'LV + S Vol (mL)'
     x = build_data.data[x_name]
-    m, b = np.polyfit(x, y, 1)
+    m, b = np.polyfit(x, y, 1)  # generate line fit equation in the form mx + b
     plt.scatter(x, y)
     plt.plot(x, m*x + b)
     plt.xlabel(x_name); plt.ylabel(y_name); plt.title('{0} vs. {1}'.format(x_name, y_name))
     plt.show()
-    print('m', m, '    b', b)
 
     x_name = '(LV + S)/RV Vol (mL)'
     x = build_data.data[x_name]
-    m, b = np.polyfit(x, y, 1)
+    m, b = np.polyfit(x, y, 1) # generate line fit equation in the form mx + b
     plt.scatter(x, y)
     plt.plot(x, m*x + b)
     plt.xlabel(x_name); plt.ylabel(y_name); plt.title('{0} vs. {1}'.format(x_name, y_name))
